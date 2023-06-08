@@ -1,4 +1,5 @@
 import firebase from './firebase';
+import Swal from 'sweetalert2';
 
 const login = (email, password) => {
 
@@ -13,7 +14,15 @@ const login = (email, password) => {
       const errorCode = error.code;
       const errorMessage = error.message;
       console.error('Login error:', errorCode, errorMessage);
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Error',
+        text: 'Email or Password incorrect',
+      });
     });
+
+
 };
 
 export default login;

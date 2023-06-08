@@ -17,6 +17,7 @@
     "webpack-dev-server": "^4.15.0"
   },
   "dependencies": {
-    "firebaseui": "^6.0.2"
+    "firebaseui": "^6.0.2",
+    "sweetalert2": "^11.4.8"
   }
 }
