@@ -1,23 +1,31 @@
 <!-- public/index.html -->
-<!DOCTYPE html>
+<!DOCTYPE html lang="en">
 <html>
-<head>
-  <title>Firebase Auth Demo</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <title>BriefingAboutItWeb - Login</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+      <link rel="stylesheet" href="./style.css">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+      
+      </head>
 <body>
-    <h1>Firebase Auth Demo</h1>
-
-    <form id="loginForm">
-      <div>
-        <label for="email">Email:</label>
-        <input type="email" id="email" required>
-      </div>
-      <div>
-        <label for="password">Password:</label>
-        <input type="password" id="password" required>
-      </div>
-      <button type="submit">Login</button>
-    </form>
+    <div class="container">
+        <div class="top"></div>
+        <div class="bottom"></div>
+        <div class="center">
+          <h2>Please Sign In</h2>
+          <form id="loginForm">
+            <input type="email" id="email" placeholder="email" required/>
+            <input type="password" id="password" placeholder="password" required/>
+            <h2>&nbsp;</h2>
+            <button type="submit" class="center-button">Login</button>
+          </form>
+        </div>
+    </div>
+      <!-- partial -->
+      <script src="https://codepen.io/banik/pen/ReNNrO/3f837b2f0085b5125112fc455941ea94.js"></script>
+      
 
   <script src="bundle.js"></script>
 </body>
