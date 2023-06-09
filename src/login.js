@@ -1,14 +1,21 @@
 import firebase from './firebase';
 import Swal from 'sweetalert2';
 
-const login = (email, password) => {
+const login = (email, password, successCallback) => {
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .then(() => {
 
-  firebase.auth().signInWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      // Login successful
-      const user = userCredential.user;
-      console.log('User is signed in:', user);
-    })
+        console.log('User is signed in:', email);
+        // Call the success callback if it is defined
+  
+        // Store email in localStorage
+        localStorage.setItem('email', email);
+  
+        // Call the success callback if it is defined
+        if (typeof successCallback === 'function') {
+          successCallback();
+        }
+      })
     .catch((error) => {
       // Handle login error
       const errorCode = error.code;

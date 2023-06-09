@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BriefingAboutIt - Home</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css?family=Raleway:400,700");
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Raleway", sans-serif;
+      background-color: white; /* Baby Blue */
+      margin: 0;
+      padding: 0;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #87cefa; /* Green */
+      padding: 10px;
+      color: white;
+    }
+
+    .top-bar h1 {
+      font-size: 24px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .logout-button {
+        background-color: #4CAF50; /* Green */
+        border: 2px solid white; /* White border */
+        border-radius: 20px; /* Rounded corners */
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+    }
+
+    .content {
+      height: calc(100vh - 40px);
+    }
+  </style>
+</head>
+<body>
+    <div class="top-bar">
+        <h1>Welcome to BriefingAboutIT!</h1>
+        <button id="logoutButton" class="logout-button">Logout</button>
+    </div>
+    
+
+  <script src="bundle.js"></script>
+  <script>
+    document.getElementById('logoutButton').addEventListener('click', () => {
+      // Clear the stored email from localStorage
+      localStorage.removeItem('email');
+
+      // Redirect to the login page
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>
