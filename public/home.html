@@ -46,6 +46,37 @@
     .content {
       height: calc(100vh - 40px);
     }
+
+    .list-item {
+        background-color: #f2f2f2; /* Light Gray */
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        list-style-type: none;
+        word-wrap: break-word; /* Wrap long words to the next line */
+        overflow-wrap: break-word; /* Wrap long words to the next line */
+        white-space: normal; /* Allow line breaks within the list item */
+        text-overflow: ellipsis; /* Truncate overflowing text with an ellipsis */
+        max-width: 100%; /* Ensure the list items don't exceed the container width */
+        margin-right: 15px; /* Add right margin of 20px */
+    }
+
+    .list-item:hover {
+        background-color: #d9d9d9; /* Darker Gray */
+    }
+
+    .article-wrapper {
+       margin-left: 20px; /* Add left margin for spacing */
+    }
+
+    .article-prompt {
+        margin-top: 20px; /* Add top margin for spacing */
+        font-size: 20px;
+        font-weight: bold;
+        align-self: flex-start;
+    }
+
   </style>
 </head>
 <body>
@@ -53,7 +84,14 @@
         <h1>Welcome to BriefingAboutIT!</h1>
         <button id="logoutButton" class="logout-button">Logout</button>
     </div>
+
+    <div class="article-wrapper">
+      <div class="article-prompt">
+        Pick an article to generate:
+      </div>
     
+      <ul id="listView" class="list-item"></ul>
+    </div>
 
   <script src="home.bundle.js"></script>
 </body>

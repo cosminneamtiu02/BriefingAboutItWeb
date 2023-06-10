@@ -1,4 +1,4 @@
-import firestore from "./firebase";
+import { firestore } from "./firebase";
 
 document.getElementById('logoutButton').addEventListener('click', () => {
     // Clear the stored email from localStorage
