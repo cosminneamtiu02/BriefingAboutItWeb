@@ -1,23 +1,17 @@
-import firebase from './firebase';
+import { auth } from './firebase';
 import Swal from 'sweetalert2';
 
 const login = (email, password, successCallback) => {
-    firebase.auth().signInWithEmailAndPassword(email, password)
-      .then(() => {
-
-        console.log('User is signed in:', email);
-        // Call the success callback if it is defined
+  auth.signInWithEmailAndPassword(email, password)
+    .then(() => {
+      console.log('User is signed in:', email);
+      localStorage.setItem('email', email);
   
-        // Store email in localStorage
-        localStorage.setItem('email', email);
-  
-        // Call the success callback if it is defined
-        if (typeof successCallback === 'function') {
-          successCallback();
-        }
-      })
+      if (typeof successCallback === 'function') {
+        successCallback();
+      }
+    })
     .catch((error) => {
-      // Handle login error
       const errorCode = error.code;
       const errorMessage = error.message;
       console.error('Login error:', errorCode, errorMessage);
@@ -28,8 +22,6 @@ const login = (email, password, successCallback) => {
         text: 'Email or Password incorrect',
       });
     });
-
-
 };
 
 export default login;
