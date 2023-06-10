@@ -29,6 +29,16 @@ articlesRef.get().then((querySnapshot) => {
         listItem.addEventListener("click", () => {
           // Handle the click event for each list item
           console.log("Clicked on document ID:", documentId);
+
+          // Variable value to pass
+          var variableValue = documentId;
+
+          // Construct the URL with the variable value
+          var nextUrl = "article_parts_selection.html?articleId=" + encodeURIComponent(variableValue);
+
+          // Redirect to the next URL
+          window.location.href = nextUrl;
+
         });
 
         listView.appendChild(listItem);
