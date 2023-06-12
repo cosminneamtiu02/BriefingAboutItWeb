@@ -155,7 +155,7 @@ function getParagraphs() {
       images.forEach(function (image) {
         var imageName = image.imageName;
         var imageid = image.id;
-        var blurredPhoto = image.blurredPhotoAsBitmap;
+        var blurredPhoto = image.imageBlurred;
         var unblurredImage = image.photo;
       
         var listItem = document.createElement("li");
