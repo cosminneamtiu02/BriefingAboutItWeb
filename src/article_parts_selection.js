@@ -5,6 +5,17 @@ document.getElementById('returnHomeButton').addEventListener('click', () => {
   window.location.href = 'home.html';
 });
 
+document.getElementById('gotoPagingButton').addEventListener('click', () => {
+    var used_parts = {titles: titles, paragraphs_used: paragraphs_used, used_images: used_images};
+    console.log(used_parts);
+    // Redirect to the article paging page
+    // window.location.href = 'home.html';
+  });
+
+var titles = [];
+var paragraphs_used = [];
+var used_images = [];
+
 // Get the value of the variable from the URL
 var urlParams = new URLSearchParams(window.location.search);
 var articleId = urlParams.get('articleId');
@@ -21,11 +32,14 @@ function getParagraphs() {
       var article = doc.data();
       var paragraphs = article.paragraphs;
 
+      titles.push({header: article.title.header, titleText:article.title.titleText});
+
       paragraphs.forEach(function(paragraph) {
         var paragraphId = paragraph.paragraphId;
         var paragraphDescription = paragraph.paragraphDescription;
         var paragraphText = paragraph.paragraphText;
         var paragraphTitle = paragraph.paragraphTitle.titleText;
+        var paragraphTitleHeader = paragraph.paragraphTitle.header;
       
         var listItem = document.createElement("li");
         listItem.style.backgroundColor = "#dddddd";
@@ -88,6 +102,7 @@ function getParagraphs() {
           yesRadio.addEventListener("change", function(event) {
             if (event.target.checked) {
               console.log("Using title");
+              titles.push({header: paragraphTitleHeader, titleText:paragraphTitle});
             }
           });
           radioLabel.appendChild(yesRadio);
@@ -102,6 +117,7 @@ function getParagraphs() {
         noRadio.addEventListener("change", function(event) {
           if (event.target.checked) {
             console.log("Not using title");
+            titles = titles.filter(map => map.titleText !== paragraphTitle);
           }
         });
         radioLabel.appendChild(noRadio);
@@ -123,9 +139,11 @@ function getParagraphs() {
         checkbox.classList.add("checkbox");
         checkbox.addEventListener("change", function() {
           if (checkbox.checked) {
-            saveParagraphId(paragraphId);
+            paragraphs_used.push(paragraphId);
+            console.log(paragraphs_used);
           } else {
-            removeParagraphId(paragraphId);
+            paragraphs_used = paragraphs_used.filter(obj => obj !== paragraphId);
+            console.log(paragraphs_used);
           }
         });
       
@@ -218,6 +236,9 @@ function getParagraphs() {
             useUnblurred.addEventListener("change", function (event) {
             if (event.target.checked) {
                 console.log("Use image unblurred");
+                used_images = used_images.filter(map => map.imageID !== imageid);
+                used_images.push({imageID: imageid, type: "unblurred"});
+                console.log(used_images);
             }
             });
         
@@ -233,6 +254,9 @@ function getParagraphs() {
             useBlurred.addEventListener("change", function (event) {
             if (event.target.checked) {
                 console.log("Use image blurred");
+                used_images = used_images.filter(map => map.imageID !== imageid);
+                used_images.push({imageID: imageid, type: "blurred"});
+                console.log(used_images);
             }
             });
         
@@ -248,7 +272,9 @@ function getParagraphs() {
         useNoImage.checked = true;
         useNoImage.addEventListener("change", function (event) {
           if (event.target.checked) {
+            used_images = used_images.filter(map => map.imageID !== imageid);
             console.log("Use no image");
+            console.log(used_images);
           }
         });
       
@@ -300,13 +326,6 @@ function showParagraphPopup(title, text) {
     });
   }
 
-function saveParagraphId(paragraphId) {
-  console.log("Paragraph ID saved:", paragraphId);
-}
-
-function removeParagraphId(paragraphId) {
-  console.log("Paragraph ID removed:", paragraphId);
-}
 
 function showImagePopup(unblurredPhoto, blurredPhotoAsBitmap) {
     var popup = document.createElement("div");
