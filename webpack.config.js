@@ -6,7 +6,8 @@ module.exports = {
   entry: {
     login: './src/index.js',
     home: './src/home.js',
-    article_parts_selection: './src/article_parts_selection.js'
+    article_parts_selection: './src/article_parts_selection.js',
+    paging: './src/article_paging.js'
   },
   output: {
     filename: '[name].bundle.js',
@@ -47,6 +48,11 @@ module.exports = {
       template: './public/article_parts_selection.html',
       filename: 'article_parts_selection.html',
       chunks: ['article_parts_selection'],
+    }),
+    new HtmlWebpackPlugin({
+      template: './public/article_paging.html',
+      filename: 'article_paging.html',
+      chunks: ['paging'],
     }),
   ],
   

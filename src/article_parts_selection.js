@@ -3,36 +3,66 @@ import { firestore } from "./firebase";
 document.getElementById('returnHomeButton').addEventListener('click', () => {
   // Redirect to the home page
   window.location.href = 'home.html';
+  localStorage.setItem('pagingData', JSON.stringify([]));
 });
 
 document.getElementById('gotoPagingButton').addEventListener('click', () => {
+
     var used_parts = {titles: titles, paragraphs_used: paragraphs_used, used_images: used_images};
     console.log(used_parts);
+
+    localStorage.setItem('pagingData', JSON.stringify(used_parts));
+
     // Redirect to the article paging page
-    // window.location.href = 'home.html';
+    window.location.href = 'article_paging.html';
   });
 
-var titles = [];
-var paragraphs_used = [];
-var used_images = [];
+
+  var titles = [];
+  var paragraphs_used = [];
+  var used_images = [];
+
+
 
 // Get the value of the variable from the URL
-var urlParams = new URLSearchParams(window.location.search);
-var articleId = urlParams.get('articleId');
+var articleId = localStorage.getItem("articleID");
 
-// Use the variable value as needed
-console.log(articleId); // Output: value
+
 
 function getParagraphs() {
   var paragraphsList = document.getElementById("paragraph-list");
   var userId = localStorage.getItem("email");
 
+
   firestore.collection("Users").doc(userId).collection("Articles").doc(articleId).get().then(function(doc) {
     if (doc.exists) {
       var article = doc.data();
       var paragraphs = article.paragraphs;
+      
+      var mapData = JSON.parse(localStorage.getItem('pagingData'));
 
-      titles.push({header: article.title.header, titleText:article.title.titleText});
+      if(typeof mapData.titles === 'undefined'){
+        titles = [{header: article.title.header, titleText:article.title.titleText, paragraphID: "main_title"}];
+        paragraphs_used = [];
+        used_images = [];
+      }else{
+
+
+        if(mapData.titles.length > 0){
+            titles = mapData.titles;
+            paragraphs_used = mapData.paragraphs_used;
+            used_images = mapData.used_images;
+        }
+        else{
+            titles = [{header: article.title.header, titleText:article.title.titleText, paragraphID: "main_title"}];
+            paragraphs_used = [];
+            used_images = [];
+        }
+      }
+
+      console.log(titles);
+      console.log(paragraphs_used);
+      console.log(used_images);
 
       paragraphs.forEach(function(paragraph) {
         var paragraphId = paragraph.paragraphId;
@@ -92,6 +122,13 @@ function getParagraphs() {
         var radioLabel = document.createElement("label");
         radioLabel.classList.add("radiobutton");
         radioLabel.innerHTML = "Use title: ";
+
+
+        var paragraphFlag = false;
+
+        if (titles.some(p => p.paragraphID === paragraphId)) {
+          paragraphFlag = true;
+        }
       
         // Only add the radio button if paragraphTitle is not null or empty
         if (paragraphTitle !== null && paragraphTitle !== "") {
@@ -99,10 +136,12 @@ function getParagraphs() {
           yesRadio.type = "radio";
           yesRadio.name = "use-title-" + paragraphId;
           yesRadio.value = "yes";
+          if(paragraphFlag){
+            yesRadio.checked = true; 
+          }
           yesRadio.addEventListener("change", function(event) {
             if (event.target.checked) {
-              console.log("Using title");
-              titles.push({header: paragraphTitleHeader, titleText:paragraphTitle});
+              titles.push({header: paragraphTitleHeader, titleText:paragraphTitle, paragraphID: paragraphId});
             }
           });
           radioLabel.appendChild(yesRadio);
@@ -113,10 +152,12 @@ function getParagraphs() {
         noRadio.type = "radio";
         noRadio.name = "use-title-" + paragraphId;
         noRadio.value = "no";
-        noRadio.checked = true; // Set "No" as the default option
+
+        if(!paragraphFlag){
+            noRadio.checked = true; // Set "No" as the default option
+        }
         noRadio.addEventListener("change", function(event) {
           if (event.target.checked) {
-            console.log("Not using title");
             titles = titles.filter(map => map.titleText !== paragraphTitle);
           }
         });
@@ -137,13 +178,14 @@ function getParagraphs() {
         var checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.classList.add("checkbox");
+        if(paragraphs_used.includes(paragraphId)){
+            checkbox.checked = true;
+        }
         checkbox.addEventListener("change", function() {
           if (checkbox.checked) {
             paragraphs_used.push(paragraphId);
-            console.log(paragraphs_used);
           } else {
             paragraphs_used = paragraphs_used.filter(obj => obj !== paragraphId);
-            console.log(paragraphs_used);
           }
         });
       
@@ -233,12 +275,13 @@ function getParagraphs() {
             useUnblurred.type = "radio";
             useUnblurred.name = "use-image-" + imageid; // Use unique names for each group
             useUnblurred.value = "Use unblurred";
+            if(used_images.some(p => p.imageID === imageid && p.type === "unblurred")){
+                useUnblurred.checked = true;
+            }
             useUnblurred.addEventListener("change", function (event) {
             if (event.target.checked) {
-                console.log("Use image unblurred");
                 used_images = used_images.filter(map => map.imageID !== imageid);
                 used_images.push({imageID: imageid, type: "unblurred"});
-                console.log(used_images);
             }
             });
         
@@ -251,12 +294,13 @@ function getParagraphs() {
             useBlurred.type = "radio";
             useBlurred.name = "use-image-" + imageid; // Use unique names for each group
             useBlurred.value = "Use blurred";
+            if(used_images.some(p => p.imageID === imageid && p.type === "blurred")){
+                useBlurred.checked = true;
+            }
             useBlurred.addEventListener("change", function (event) {
             if (event.target.checked) {
-                console.log("Use image blurred");
                 used_images = used_images.filter(map => map.imageID !== imageid);
                 used_images.push({imageID: imageid, type: "blurred"});
-                console.log(used_images);
             }
             });
         
@@ -269,12 +313,12 @@ function getParagraphs() {
         useNoImage.type = "radio";
         useNoImage.name = "use-image-" + imageid; // Use unique names for each group
         useNoImage.value = "Use no image";
-        useNoImage.checked = true;
+        if(!used_images.some(p => p.imageID === imageid)){
+            useNoImage.checked = true;   
+        }
         useNoImage.addEventListener("change", function (event) {
           if (event.target.checked) {
             used_images = used_images.filter(map => map.imageID !== imageid);
-            console.log("Use no image");
-            console.log(used_images);
           }
         });
       

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BriefingAboutIt - Article Generation</title>
+</head>
+
+<style>
+    @import url("https://fonts.googleapis.com/css?family=Raleway:400,700");
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Raleway", sans-serif;
+      background-color: white; /* Baby Blue */
+      margin: 0;
+      padding: 0;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      background-color: #87cefa; /* Green */
+      padding: 10px;
+      color: white;
+    }
+
+    .top-bar h1 {
+      font-size: 24px;
+      margin: 0;
+      padding: 0;
+      margin-left: auto; /* Push the button to the left */
+      margin-right: auto; /* Center the text */
+    }
+
+    .button-type {
+        background-color: #4CAF50; /* Green */
+        border: 2px solid white; /* White border */
+        border-radius: 20px; /* Rounded corners */
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+    }
+
+    h2 {
+      margin-top: 50px; /* Adjust the top margin as needed */
+      margin-left: 20px; /* Adjust the left margin as needed */
+    }
+
+    .content {
+      height: calc(100vh - 40px);
+    }
+
+    .list-item {
+        background-color: #f2f2f2; /* Light Gray */
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        list-style-type: none;
+        word-wrap: break-word; /* Wrap long words to the next line */
+        overflow-wrap: break-word; /* Wrap long words to the next line */
+        white-space: normal; /* Allow line breaks within the list item */
+        text-overflow: ellipsis; /* Truncate overflowing text with an ellipsis */
+        max-width: 100%; /* Ensure the list items don't exceed the container width */
+        margin-right: 15px; /* Add right margin of 20px */
+    }
+
+    .list-item:hover {
+        background-color: #d9d9d9; /* Darker Gray */
+    }
+
+    .article-wrapper {
+       margin-left: 20px; /* Add left margin for spacing */
+    }
+
+    .article-prompt {
+        margin-top: 20px; /* Add top margin for spacing */
+        font-size: 20px;
+        font-weight: bold;
+        align-self: flex-start;
+    }
+
+    #paragraph-popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        z-index: 9999;
+        max-height: 80%;
+        overflow-y: auto;
+    }
+ 
+
+    #close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background-color: #ccc;
+    color: #fff;
+    font-size: 20px;
+    line-height: 30px;
+    text-align: center;
+    cursor: pointer;
+    }
+</style>
+<body>
+
+    <div class="top-bar" style="display: flex; justify-content: space-between;">        
+        <button id="goBackToPartsSelecction" class="button-type">Return to article parts selection</button>
+        <button id="generateArticle" class="button-type">Generate Article</button>
+    </div>
+
+    <script src="paging.bundle.js"></script>
+</body>
+</html>

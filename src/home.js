@@ -30,14 +30,10 @@ articlesRef.get().then((querySnapshot) => {
           // Handle the click event for each list item
           console.log("Clicked on document ID:", documentId);
 
-          // Variable value to pass
-          var variableValue = documentId;
-
-          // Construct the URL with the variable value
-          var nextUrl = "article_parts_selection.html?articleId=" + encodeURIComponent(variableValue);
+          localStorage.setItem('articleID', documentId);
 
           // Redirect to the next URL
-          window.location.href = nextUrl;
+          window.location.href = 'article_parts_selection.html';
 
         });
 
