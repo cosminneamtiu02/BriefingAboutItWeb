@@ -19,3 +19,22 @@ document.getElementById('generateArticle').addEventListener('click', () => {
     localStorage.setItem('pagingData', JSON.stringify([]));
     window.location.href = 'home.html';
 });
+
+function generateTitleHTML(header, title) {
+    return "<" + header + ">" + title + "</" + header + ">";
+}
+
+function generateParagraphHTML(text) {
+    return "<pre>" + text + "</pre>"
+}
+
+function generateImageHTML(bitstring) {
+    const base64Data = btoa(bitstring); // Convert bitstring to base64
+    const imageSrc = `data:image/png;base64,${base64Data}`; // Create data URL
+    
+    // Return HTML string for the image
+    return `<img src="${imageSrc}" alt="Image">`;
+}
+
+console.log(generateTitleHTML("h1", "plm"));
+console.log(generateParagraphHTML("plm"));
