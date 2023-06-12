@@ -26,7 +26,7 @@ function getParagraphs() {
         var paragraphDescription = paragraph.paragraphDescription;
         var paragraphText = paragraph.paragraphText;
         var paragraphTitle = paragraph.paragraphTitle.titleText;
-
+      
         var listItem = document.createElement("li");
         listItem.style.backgroundColor = "#dddddd";
         listItem.style.padding = "10px";
@@ -39,29 +39,28 @@ function getParagraphs() {
         listItem.style.textOverflow = "ellipsis";
         listItem.style.maxWidth = "100%";
         listItem.style.marginRight = "15px";
-
+      
         listItem.addEventListener("mouseenter", function() {
-            listItem.style.backgroundColor = "#f2f2f2";
+          listItem.style.backgroundColor = "#f2f2f2";
         });
-
+      
         listItem.addEventListener("mouseleave", function() {
-            listItem.style.backgroundColor = "#d9d9d9";
-
+          listItem.style.backgroundColor = "#d9d9d9";
         });
-        
+      
         listItem.classList.add("article-item");
-
+      
         var description = document.createElement("p");
         description.classList.add("description");
         description.innerHTML = paragraphDescription;
-
+      
         var displayBtn = document.createElement("button");
         displayBtn.classList.add("button-type");
         displayBtn.innerHTML = "Display Paragraph";
         displayBtn.addEventListener("click", function() {
-            showParagraphPopup(paragraphTitle, paragraphText);
+          showParagraphPopup(paragraphTitle, paragraphText);
         });
-
+      
         // Apply the button styling
         displayBtn.style.backgroundColor = "#4CAF50";
         displayBtn.style.borderRadius = "20px";
@@ -69,29 +68,32 @@ function getParagraphs() {
         displayBtn.style.textAlign = "center";
         displayBtn.style.textDecoration = "none";
         displayBtn.style.fontSize = "16px";
-
+      
         var buttonRow = document.createElement("div");
         buttonRow.classList.add("row");
-
+      
         var radioContainer = document.createElement("div");
         radioContainer.classList.add("radio-container");
-        
+      
         var radioLabel = document.createElement("label");
         radioLabel.classList.add("radiobutton");
         radioLabel.innerHTML = "Use title: ";
-        
-        var yesRadio = document.createElement("input");
-        yesRadio.type = "radio";
-        yesRadio.name = "use-title-" + paragraphId;
-        yesRadio.value = "yes";
-        yesRadio.addEventListener("change", function(event) {
-          if (event.target.checked) {
-            console.log("Using title");
-          }
-        });
-        radioLabel.appendChild(yesRadio);
-        radioLabel.appendChild(document.createTextNode(" Yes"));
-        
+      
+        // Only add the radio button if paragraphTitle is not null or empty
+        if (paragraphTitle !== null && paragraphTitle !== "") {
+          var yesRadio = document.createElement("input");
+          yesRadio.type = "radio";
+          yesRadio.name = "use-title-" + paragraphId;
+          yesRadio.value = "yes";
+          yesRadio.addEventListener("change", function(event) {
+            if (event.target.checked) {
+              console.log("Using title");
+            }
+          });
+          radioLabel.appendChild(yesRadio);
+          radioLabel.appendChild(document.createTextNode(" Yes"));
+        } 
+      
         var noRadio = document.createElement("input");
         noRadio.type = "radio";
         noRadio.name = "use-title-" + paragraphId;
@@ -104,19 +106,18 @@ function getParagraphs() {
         });
         radioLabel.appendChild(noRadio);
         radioLabel.appendChild(document.createTextNode(" No"));
-        
+      
         radioContainer.appendChild(radioLabel);
-
-
+      
         buttonRow.appendChild(displayBtn);
         buttonRow.appendChild(radioContainer);
-
+      
         var checkboxContainer = document.createElement("div");
         checkboxContainer.classList.add("checkbox-container");
-
+      
         var checkboxLabel = document.createElement("label");
         checkboxLabel.innerHTML = "Use paragraph?";
-
+      
         var checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.classList.add("checkbox");
@@ -127,15 +128,26 @@ function getParagraphs() {
             removeParagraphId(paragraphId);
           }
         });
-
+      
+        if (paragraphText === null || paragraphText === "") {
+          checkbox.disabled = true;
+          var noteMessage = document.createElement("p");
+          noteMessage.innerHTML = "(This is just a note. It cannot be used as a paragraph. Modify it using the app.)";
+          noteMessage.style.fontWeight = "bold";
+          listItem.appendChild(noteMessage);
+        }
+      
         checkboxLabel.appendChild(checkbox);
         checkboxContainer.appendChild(checkboxLabel);
         buttonRow.appendChild(checkboxContainer);
-
+      
         listItem.appendChild(description);
         listItem.appendChild(buttonRow);
         paragraphsList.appendChild(listItem);
       });
+      
+      
+
 
       var images = article.images;
       var imagesList = document.getElementById("images-list");
@@ -262,19 +274,31 @@ function getParagraphs() {
 }
 
 function showParagraphPopup(title, text) {
-  var popup = document.getElementById("paragraph-popup");
-  var closeButton = document.getElementById("close-button");
-  var popupTitle = document.getElementById("paragraph-title");
-  var popupText = document.getElementById("paragraph-text");
+    var popup = document.getElementById("paragraph-popup");
+    var closeButton = document.getElementById("close-button");
+    var popupTitle = document.getElementById("paragraph-title");
+    var popupText = document.getElementById("paragraph-text");
+  
 
-  popupTitle.innerHTML = title;
-  popupText.innerHTML = text;
-  popup.style.display = "block";
+  
+    if (text === null || text === "") {
+      popupText.innerHTML = "(No paragraph text to be displayed)";
+    } else {
+      popupText.innerHTML = text;
+    }
 
-  closeButton.addEventListener("click", function() {
-    popup.style.display = "none";
-  });
-}
+    if (title === null || title === "") {
+        popupTitle.innerHTML = "(No title to be displayed)";
+    } else {
+        popupTitle.innerHTML = title;
+    }
+  
+    popup.style.display = "block";
+  
+    closeButton.addEventListener("click", function() {
+      popup.style.display = "none";
+    });
+  }
 
 function saveParagraphId(paragraphId) {
   console.log("Paragraph ID saved:", paragraphId);
