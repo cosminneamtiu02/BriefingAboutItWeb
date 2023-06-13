@@ -18,49 +18,9 @@ var titlesHTMLasText = processTitles(titles);
 
 const docRef = firestore.collection('Users').doc(user).collection('Articles').doc(articleID);
 
-// Function to allow dropping elements
-function allowDrop(event) {
-  event.preventDefault();
-}
 
-// Function to initiate the drag event
-function drag(event) {
-  event.dataTransfer.setData("text", event.target.id);
-}
 
-// Function to handle dropping elements and update the order
-function drop(event) {
-  event.preventDefault();
-  var data = event.dataTransfer.getData("text");
-  var target = event.target;
 
-  // If the target element is a child of the box, set the target to the box itself
-  if (target.className !== "box") {
-    target = target.closest(".box");
-  }
-
-  // Insert the dragged element before or after the target element
-  if (target) {
-    if (event.clientY < target.getBoundingClientRect().top + target.offsetHeight / 2) {
-      target.parentNode.insertBefore(document.getElementById(data), target);
-    } else {
-      target.parentNode.insertBefore(document.getElementById(data), target.nextSibling);
-    }
-  }
-}
-
-// Function to retrieve the current order of elements
-function getOrder() {
-  var listbox = document.getElementById("listbox");
-  var boxElements = listbox.getElementsByClassName("box");
-  var order = [];
-
-  for (var i = 0; i < boxElements.length; i++) {
-    order.push(boxElements[i].id);
-  }
-
-  console.log(order);
-}
 
 function addElements(list) {
   var listbox = document.getElementById("listbox");
@@ -109,7 +69,63 @@ document.getElementById('generateArticle').addEventListener('click', () => {
     // Redirect to the home page
     localStorage.setItem('pagingData', JSON.stringify([]));
     window.location.href = 'home.html';
+    console.log(downloadHtmlFile(generateHtmlWithBodyContent(removeCharacters(retrieveBoxContent()))));
 });
+
+function downloadHtmlFile(content) {
+  const element = document.createElement('a');
+  const file = new Blob([content], { type: 'text/html' });
+  element.href = URL.createObjectURL(file);
+  element.download = "undefined.html";
+  element.click();
+}
+
+function retrieveBoxContent() {
+  var boxes = document.querySelectorAll('.box');
+  var boxContent = [];
+
+  // Iterate over each box and retrieve its inner HTML
+  boxes.forEach(function (box) {
+    boxContent.push(box.innerHTML);
+  });
+
+  return boxContent;
+}
+
+function removeCharacters(strings) {
+  var regex = /[\n\\]/g;
+  var result = [];
+
+  for (var i = 0; i < strings.length; i++) {
+    var modifiedString = strings[i].replace(regex, '');
+    result.push(modifiedString);
+  }
+
+  return result;
+}
+
+function generateHtmlWithBodyContent(contentArray) {
+  // Opening HTML structure
+  let htmlTemplate = `<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>HTML Body Content</title>
+    </head>
+    <body>
+    `;
+
+  // Concatenating content with new lines
+  const bodyContent = contentArray.join('\n');
+
+  // Closing HTML structure
+  htmlTemplate += bodyContent + `
+    </body>
+    </html>
+    `;
+
+  return htmlTemplate;
+}
 
 function generateTitleHTML(header, title) {
     return "<" + header + ">" + title + "</" + header + ">";
