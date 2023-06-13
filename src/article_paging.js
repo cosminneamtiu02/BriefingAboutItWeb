@@ -18,11 +18,57 @@ var titlesHTMLasText = processTitles(titles);
 
 const docRef = firestore.collection('Users').doc(user).collection('Articles').doc(articleID);
 
+
+function allowDrop(event) {
+  event.preventDefault();
+}
+
+function drag(event) {
+  event.dataTransfer.setData("text", event.target.id);
+}
+
+function drop(event) {
+  event.preventDefault();
+  var data = event.dataTransfer.getData("text");
+  event.target.appendChild(document.getElementById(data));
+}
+
+function getOrder() {
+  var listbox = document.getElementById("listbox");
+  var boxElements = listbox.getElementsByClassName("box");
+  var order = [];
+
+  for (var i = 0; i < boxElements.length; i++) {
+    order.push(boxElements[i].id);
+  }
+
+  console.log(order);
+}
+
+function addElements(list) {
+  var listbox = document.getElementById("listbox");
+
+  for (var i = 0; i < list.length; i++) {
+    var newBox = document.createElement("div");
+    newBox.className = "box";
+    newBox.id = "box" + i; // Set a unique ID for each box element
+    newBox.draggable = true; // Make the box element draggable
+    newBox.addEventListener("dragstart", drag); // Add drag event listener
+
+    newBox.innerHTML = list[i];
+
+    listbox.appendChild(newBox);
+  }
+}
+
+addElements(titlesHTMLasText);
+
 console.log(titlesHTMLasText);
 
 processParagraphs(docRef, paragraphs_used)
   .then((paragraphsHTMLasText) => {
     console.log(paragraphsHTMLasText);
+    addElements(paragraphsHTMLasText);
   })
   .catch((error) => {
     console.error('Error processing paragraphs:', error);
@@ -31,6 +77,7 @@ processParagraphs(docRef, paragraphs_used)
   processImages(docRef, used_images)
   .then((imagesHTMLasText) => {
     console.log(imagesHTMLasText);
+    addElements(imagesHTMLasText);
   })
   .catch((error) => {
     console.error('Error processing paragraphs:', error);
@@ -139,8 +186,8 @@ function processImages(docRef, imagesList) {
 }
 
 function generateImageHTML(bitstring) {
-    const base64Data = btoa(bitstring); // Convert bitstring to base64
-    const imageSrc = `data:image/png;base64,${base64Data}`; // Create data URL
-    // Return HTML string for the image
-    return `<img src="${imageSrc}" alt="Image">`;
+  var imageHTML = `
+  <img id="image" src="data:image/png;base64,${bitstring}" alt="Image">
+  `;
+  return imageHTML;
 }
