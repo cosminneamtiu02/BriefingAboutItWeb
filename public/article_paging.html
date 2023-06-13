@@ -127,11 +127,22 @@
   height: 60%;
   border: 1px solid black;
   margin: 5px;
+  background-color: #f2f2f2; /* Light Gray */
+  padding: 10px;
+  border-radius: 5px;
+  cursor: move;
+  list-style-type: none;
+  word-wrap: break-word; /* Wrap long words to the next line */
+  overflow-wrap: break-word; /* Wrap long words to the next line */
+  white-space: normal; /* Allow line breaks within the list item */
+  text-overflow: ellipsis; /* Truncate overflowing text with an ellipsis */
+  max-width: 100%; /* Ensure the list items don't exceed the container width */
 }
 
 .box:hover {
-  cursor: move;
+  background-color: #d9d9d9; /* Darker Gray */
 }
+
 </style>
 <body>
 
@@ -140,10 +151,55 @@
         <button id="generateArticle" class="button-type">Generate Article</button>
     </div>
 
-    <div id="listbox" class="listbox">
-    </div>
+    <div id="listbox"></div>
 
+<script>
+  // Function to allow dropping elements
+  function allowDrop(event) {
+    event.preventDefault();
+  }
 
+  // Function to handle dragging and store the dragged element ID
+  function drag(event) {
+    event.dataTransfer.setData('text/plain', event.target.id);
+  }
 
+  // Function to handle dropping elements and update the order
+  function drop(event) {
+    event.preventDefault();
+    var data = event.dataTransfer.getData('text/plain');
+    var target = event.target;
+
+    // If the target element is a child of the box, set the target to the box itself
+    if (target.className !== 'box') {
+      target = target.closest('.box');
+    }
+
+    // Insert the dragged element before or after the target element
+    if (target) {
+      var draggedElement = document.getElementById(data);
+      if (draggedElement) {
+        if (event.clientY < target.getBoundingClientRect().top + target.offsetHeight / 2) {
+          target.parentNode.insertBefore(draggedElement, target);
+        } else {
+          target.parentNode.insertBefore(draggedElement, target.nextSibling);
+        }
+      }
+    }
+  }
+
+  // Rest of your code...
+
+  // Event listener for dragstart event
+  document.querySelectorAll('.box').forEach(function (box) {
+    box.addEventListener('dragstart', drag);
+  });
+
+  // Event listener for dragover event
+  document.getElementById('listbox').addEventListener('dragover', allowDrop);
+
+  // Event listener for drop event
+  document.getElementById('listbox').addEventListener('drop', drop);
+</script>
 </body>
 </html>
